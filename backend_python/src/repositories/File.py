@@ -25,44 +25,100 @@ class File:
 
     def __init__(self, name: str, modification_date: str, size: str, extension: str, address: str) -> None:
         
-        self.data = {'name': name, 'modification_date': modification_date, 'size': size ,\
-                      'extension': extension, 'address': address}
+        self.name = name
+        self.modification_date = modification_date
+        self.size = size
+        self.extension = extension
+        self.address = address
     
     def __str__(self):
-        return f"{self.data.get('size')} {self.data.get('modification_date')} {self.data.get('name')}.{self.data.get('extension')}"
+        return f"{self.size} {self.modification_date} {self.name}.{self.extension}"
 
-    def get_data(self, key) -> str:
+    def get_name(self) -> str:
         """
-        This method returns the value of the attribute given of the file
-        The file has the following attributes:
-        - name: The name of the file -> str
-        - modification_date: The date of the last modification of the file -> str
-        - size: The size of the file -> str
-        - extension: The extension of the file -> str
-        - address: The memory address of the file -> str
+        This method returns the name of the file
         Args:
-            key (str): The attribute of the file
+            None
         Returns:
-            str: The value of the attribute
+            str: The name of the file
         """
-        return self.data.get(key)
+        return self.name
     
-    def change_data(self, key: str, value: str) -> None:
+    def get_modification_date(self) -> str:
         """
-        This method change one of the attributes of the file
-        The file has the following attributes:
-        - name: The name of the file -> str
-        - modification_date: The date of the last modification of the file -> str
-        - size: The size of the file -> str
-        - extension: The extension of the file -> str
-        - address: The memory address of the file -> str
+        This method returns the modification date of the file
         Args:
-            key (str): New name of the file
-            value (str): New value of the attribute
+            None
+        Returns:
+            str: The modification date of the file
+        """
+        return self.modification_date
+
+    def get_size(self) -> str:
+        """
+        This method returns the size of the file
+        Args:
+            None
+        Returns:
+            str: The size of the file
+        """
+        return self.size
+    
+    def get_extension(self) -> str:
+        """
+        This method returns the extension of the file
+        Args:
+            None
+        Returns:
+            str: The extension of the file
+        """
+        return self.extension
+    
+    def get_address(self) -> str:
+        """
+        This method returns the memory address of the file
+        Args:
+            None
+        Returns:
+            str: The memory address of the file
+        """
+        return self.address
+    
+    def set_name(self, new_name: str) -> None:
+        """
+        This method sets the name of the file
+        Args:
+            newName (str): The new name of the file
         Returns:
             None
         """
-        self.data[key] = value
+        self.name = new_name
+    
+    def set_modification_date(self, new_modification_date: str) -> None:
+        """
+        This method sets the modification date of the file
+        Args:
+            newModificationDate (str): The new modification date of the file
+        Returns:
+            None
+        """
+        self.modification_date = new_modification_date
+    
+    def convert_dict(self) -> dict:
+        """
+        This method converts the file to a dict
+        Args:
+            None
+        Returns:
+            dict: The file as a dict
+        """
+        return {
+            "name": self.name,
+            "modification_date": self.modification_date,
+            "size": self.size,
+            "extension": self.extension,
+            "address": self.address
+        }
         
     
     def move(self, new_address: str) -> None:

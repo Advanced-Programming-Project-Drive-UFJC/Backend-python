@@ -12,73 +12,205 @@ class Folder:
     """
 
     def __init__(self, name: str, modification_date: str) -> None:
-        
-        self.folders = {}
-        self.files = {}
+        self.name = name
+        self.modification_date = modification_date
+        self.folders = []
+        self.files = []
         self.users = {}
         self.address = None
-        self.data = {'name': name, 'modification_date': modification_date,\
-                     'folders': self.folders, 'files': self.files, 'users': self.users}
     
     def __str__(self):
-        #TODO : find a way to do not mark error here
-        self.data
-
-    def get_data(self, key: str) -> str:
-        """
-        This method returns the value of the attribute given of the folder
-        The folder has the following attributes:
-        - name: The name of the folder -> str
-        - modification_date: The date of the last modification of the folder -> str
-        - address: The memory address of the folder -> str
-        Args:
-            key (str): The attribute of the folder
-        Returns:
-            str: The value of the attribute
-        """
-        return self.data.get(key)
-
-    def get_files_data(self, key: str) -> list:
-        """
-        This method returns the specific attribute put on the parrameter of the all files
-        that the folder has.
-        This method do not return the attributes of the files inner the folders.
-        Args:
-            key (str): The attribute of the files
-
-        Returns:
-            dict: The attribute of the files in the folder
-        """
-        result = {}
-        for file in self.data['files']:
-            result[self.get_data('name')] = self.data['files'][file].get_data(key)
-        return result
-    
-    def get_folders_data(self, key: str) -> dict:
-        """
-        This method returns the specific attribute put on the parrameter of the all folders
-        that the folder has.
-        Args:
-            key (str): The attribute of the folders
-        Returns:
-            dict: The attribute of the folders in the folder
-        """
-        #TODO: implements a better solution here
-        result = {}
-        for folder_name in self.data['folders']:
-            result[folder_name] = {}
-            result[folder_name] = self.data['folders'][folder_name].get_files_data(key)
-
-            print(result[folder_name])
-            
-            folder = self.data['folders'][folder_name]
-            result[folder.get_data('name')] = folder.get_folders_data(key)
-            break    
-        return result
-            
         
-            
+        return f"{self.name} {self.modification_date}"
+
+    def get_name(self) -> str:
+        """
+        This method returns the name of the folder
+        Args:
+            None
+        Returns:
+            str: The name of the folder
+        """
+        return self.name
+
+    def get_modification_date(self) -> str:
+        """
+        This method returns the modification date of the folder
+        Args:
+            None
+        Returns:
+            str: The modification date of the folder
+        """
+        return self.modification_date
     
+    def get_address(self) -> str:
+        """
+        This method returns the address of the folder
+        Args:
+            None
+        Returns:
+            str: The address of the folder
+        """
+        return self.address
+    
+    def set_address(self, address: str) -> None:
+        """
+        This method sets the address of the folder
+        Args:
+            address (str): The address of the folder
+        Returns:
+            None
+        """
+        self.address = address
+    
+    def get_files(self) -> list:
+        """
+        This method returns the files of the folder
+        Args:
+            None
+        Returns:
+            list: The files of the folder
+        """
+        return self.files
+
+
+    def get_folders(self) -> list:
+        """
+        This method returns the folders of the folder
+        Args:
+            None
+        Returns:
+            list: The folders of the folder
+        """
+        return self.folders
+
+    #TODO: implement getters as paramaters of a super function calle get_files_data
+
+    def get_files_names(self) -> list:
+        """
+        This method returns the names of the files of the folder
+        Args:
+            None
+        Returns:
+            list: The names of the files of the folder
+        """
+        return [file.get_name() for file in self.files]
+    
+    def get_files_modification_date(self) -> list:
+        """
+        This method returns the modification date of the files of the folder
+        Args:
+            None
+        Returns:
+            list: The modification dates of the files of the folder
+        """
+        return [file.get_modification_date() for file in self.files]
+    
+    def get_files_sizes(self) -> list:
+        """
+        This method returns the sizes of the files of the folder
+        Args:
+            None
+        Returns:
+            list: The sizes of the files of the folder
+        """
+        return [file.get_sizes() for file in self.files]
+    
+    def get_files_extensions(self) -> list:
+        """
+        This method returns the extensions of the files of the folder
+        Args:
+            None
+        Returns:
+            list: The extensions of the files of the folder
+        """
+        return [file.get_extensions() for file in self.files]
+    
+    def get_files_addresses(self) -> list:
+        """
+        This method returns the addresses of the files of the folder
+        Args:
+            None
+        Returns:
+            list: The addresses of the files of the folder
+        """
+        return [file.get_address() for file in self.files]
+    
+    def get_folders_names(self) -> list:
+        """
+        This method returns the names of the folders of the folder
+        Args:
+            None
+        Returns:
+            list: The names of the folders of the folder
+        """
+        result = []
+        for folder in self.folders:
+            result.append(folder.get_files_names())
+            if len(folder.get_folders()) != 0:
+                result.append(folder.get_folders_names())
+        return result
+
+    def get_folders_modification_dates(self) -> list:
+        """
+        This method returns the modification dates of the folders of the folder
+        Args:
+            None
+        Returns:
+            list: The modification date  of the folders of the folder
+        """
+        result = []
+        for folder in self.folders:
+            result.append(folder.get_files_modification_dates())
+            if len(folder.get_folders()) != 0:
+                result.append(folder.get_folders_modification_dates())
+        return result
+    
+    def get_folders_sizes(self) -> list:
+        """
+        This method returns the sizes of the folders of the folder
+        Args:
+            None
+        Returns:
+            list: The sizes of the folders of the folder
+        """
+        result = []
+        for folder in self.folders:
+            result.append(folder.get_files_sizes())
+            if len(folder.get_folders()) != 0:
+                result.append(folder.get_folders_sizes())
+        return result
+    
+    def get_folders_extensions(self) -> list:
+        """
+        This method returns the extensions of the folders of the folder
+        Args:
+            None
+        Returns:
+            list: The extensions of the folders of the folder
+        """
+        result = []
+        for folder in self.folders:
+            result.append(folder.get_files_extensions())
+            if len(folder.get_folders()) != 0:
+                result.append(folder.get_folders_extensions())
+        return result
+    
+    def get_folders_addresses(self) -> list:
+        """
+        This method returns the addresses of the folders of the folder
+        Args:
+            None
+        Returns:
+            list: The addresses of the folders of the folder
+        """
+        result = []
+        for folder in self.folders:
+            result.append(folder.get_files_addresses())
+            if len(folder.get_folders()) != 0:
+                result.append(folder.get_folders_addresses())
+        return result
+
     def add_file(self, file: File) -> None:
         """
         This method adds a file to the folder
@@ -87,7 +219,8 @@ class Folder:
         Returns:
             None
         """
-        self.data['files'][file.get_data('name')] = file
+        self.files.append(file)
+
     
     def add_folder(self, folder ) -> None:
         """
@@ -97,9 +230,59 @@ class Folder:
         Returns:
             None
         """
-        self.data['folders'][folder.get_data('name')] = folder
+        self.folders.append(folder)
     
-    def create(self):
+    def convert_dict(self) -> dict:
+        """
+        This method returns the folder as a dict
+        Args:
+            None
+        Returns:
+            dict: The folder as a dict
+        """
+        return {
+            "name": self.name,
+            "modification_date": self.modification_date,
+            "folders": [folder.convert_dict() for folder in self.folders],
+            "files": [file.convert_dict() for file in self.files],
+            "users": self.users,
+            "address": self.address
+        }
+    
+    def load(self, name: str) -> None:
+        """
+        This method loads the folder from a json
+        Args:
+            name (str): The name of the folder
+        Returns:
+            None
+        """
+        self.address = 'src/data/' + name + '.json'
+        try:
+            with open(self.address, 'r', encoding='utf-8') as file:
+                data = json.load(file)
+                self.name = data['name']
+                self.modification_date = data['modification_date']
+                for file in data['files']:
+                    objetct_file = File(file['name'], file['modification_date'], file['size'],\
+                                  file['extension'], file['address'])
+                    self.files.append(objetct_file)
+                for index_folder in range(0, len(data['folders'])):
+                    object_folder = Folder(data['folders'][index_folder]['name'], data['folders'][index_folder]['modification_date'])
+                    for index_file in range(0, len(data['folders'][index_folder]['files'])):
+                        object_file = File(data['folders'][index_folder]['files'][index_file]['name'], \
+                                           data['folders'][index_folder]['files'][index_file]['modification_date'],\
+                                           data['folders'][index_folder]['files'][index_file]['size'],\
+                                           data['folders'][index_folder]['files'][index_file]['extension'],\
+                                           data['folders'][index_folder]['files'][index_file]['address'])
+                        object_folder.add_file(object_file)
+                    self.folders.append(object_folder)
+                self.users = data['users']
+                self.address = data['address']
+        except Exception as e:
+            print('File cannot be loaded', e)
+
+    def save(self):
         """
         This method creates the folder in a json
         Args:
@@ -107,10 +290,10 @@ class Folder:
         Returns:
             None
         """
-        self.address = 'src/data/' + self.get_data('name') + '.json'
+        self.address = 'src/data/' + self.name + '.json'
         try:
             with open(self.address, 'w', encoding='utf-8') as file:
-                json.dump(self.data, file)
+                json.dump(self.convert_dict(), file, indent=4)
         except Exception as e:
             print('File cannot be created', e)
     

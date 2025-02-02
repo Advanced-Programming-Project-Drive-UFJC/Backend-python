@@ -1,1 +1,30 @@
-{"name": "folder1", "modification_date": "2021-08-09", "folders": {}, "files": {"file1": 
+{
+    "name": "folder1",
+    "modification_date": "2021-01-01",
+    "folders": [],
+    "files": [
+        {
+            "name": "file1",
+            "modification_date": "2021-01-01",
+            "size": "1MB",
+            "extension": "txt",
+            "address": "0x0001"
+        },
+        {
+            "name": "file2",
+            "modification_date": "2021-01-02",
+            "size": "2MB",
+            "extension": "txt",
+            "address": "0x0002"
+        },
+        {
+            "name": "file3",
+            "modification_date": "2021-01-03",
+            "size": "3MB",
+            "extension": "txt",
+            "address": "0x0003"
+        }
+    ],
+    "users": {},
+    "address": "src/data/folder1.json"
+}
