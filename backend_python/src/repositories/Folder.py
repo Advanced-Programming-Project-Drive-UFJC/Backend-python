@@ -2,8 +2,8 @@
 This module contains the Folder class represent in the database.
 Author: Juan Nicolás Diaz Salamanca <jndiaz@udistrital.edu.co>
 """
-from .File import File
 import json
+from .File import File
 
 class Folder:
     """
@@ -18,7 +18,7 @@ class Folder:
         self.files = []
         self.users = {}
         self.address = None
-    
+    #TODO: Don´t forget about self.users
     def __str__(self):
         
         return f"{self.name} {self.modification_date}"
@@ -136,13 +136,67 @@ class Folder:
         """
         return [file.get_address() for file in self.files]
     
-    def get_folders_names(self) -> list:
+    def get_file_by_name(self, name: str) -> File:
         """
-        This method returns the names of the folders of the folder
+        This method returns a file by its name
+        Args:
+            name (str): The name of the file
+        Returns:
+            File: The file
+        """
+        result = None
+        for file in self.files:
+            if file.get_name() == name:
+                return file
+            
+        for file in self.get_folders_files(None):
+            if not isinstance(file, list) \
+                and file.get_name() == name:
+                return file
+       
+        return result
+    
+    def get_folder_by_name(self, name: str) :
+        """
+        This method returns a folder by its name
+        Args:
+            name (str): The name of the folder
+        Returns:
+            Folder: The folder
+        """
+        result = None
+        for folder in self.folders:
+            if folder.get_name() == name:
+                return folder
+        return result
+    
+    def get_folders_files(self, list_result) -> list:
+        """
+        This methods returns a list of file list from the folders
+        inners it. Each file list owner to a folder
         Args:
             None
         Returns:
-            list: The names of the folders of the folder
+            File lists
+        """
+        #TODO implement a better solution here and repetar logic at the others
+        if list_result is None:
+            list_result = []
+        for folder in self.folders:
+            for file in folder.get_files():
+                list_result.append(file)
+            if len(folder.get_folders()) != 0:
+                list_result.append(folder.get_folders_files(list_result))
+        return list_result
+
+
+    def get_folders_names(self) -> list:
+        """
+        This method returns the names of the files inner folders of the folder
+        Args:
+            None
+        Returns:
+            list: The files names of the folder
         """
         result = []
         for folder in self.folders:

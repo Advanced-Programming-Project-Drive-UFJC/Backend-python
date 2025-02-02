@@ -23,6 +23,6 @@ folder1.add_file(file2)
 folder1.add_file(file3)
 folder2.add_folder(folder1)
 folder3.add_folder(folder2)
-
+folder3.save()
 
 
