@@ -8,7 +8,6 @@ A file is a dict so its requires:
     - address (str): The memory address of the file
 Author: Juan Nicolás Diaz Salamanca <jndiaz@udistrital.edu.co>
 """
-
 class File:
     """
     This class represents a file in the database

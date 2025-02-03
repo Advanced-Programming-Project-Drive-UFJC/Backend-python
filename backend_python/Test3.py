@@ -18,20 +18,20 @@ file3 = File("file3", "2021-01-03", "3MB", "txt", "0x0003")
 file4 = File("file4", "2021-01-04", "4MB", "txt", "0x0004")
 file5 = File("file5", "2021-01-05", "5MB", "txt", "0x0005")
 
-folder1 = Folder("folder1", "2021-01-01")
+folder1 = Folder("folder1")
 folder1.add_file(file1)
 folder1.add_file(file2)
 folder1.add_file(file3)
 
-folder2 = Folder("folder2", "2021-01-02")
+folder2 = Folder("folder2")
 folder2.add_file(file4)
 folder2.add_file(file5)
 folder2.add_folder(folder1)
 
-folder3 = Folder("folder3", "2021-01-03")
+folder3 = Folder("folder3")
 folder3.add_folder(folder2)
 
-folder4 = Folder("folder4", "2021-01-04")
+folder4 = Folder("folder4")
 
 folder_service1 = FolderService(folder1)
 folder_service2 = FolderService(folder2)

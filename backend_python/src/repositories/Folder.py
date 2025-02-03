@@ -2,7 +2,7 @@
 This module contains the Folder class represent in the database.
 Author: Juan Nicolás Diaz Salamanca <jndiaz@udistrital.edu.co>
 """
-import json
+import json, os, datetime
 from .File import File
 
 class Folder:
@@ -10,18 +10,29 @@ class Folder:
     This class represents a folder in the database
     A folder is a dict of dicts
     """
-
-    def __init__(self, name: str, modification_date: str) -> None:
+    #TODO : Verify that always exist a data folder in src
+    def __init__(self, name: str) -> None:
         self.name = name
-        self.modification_date = modification_date
+        self.modification_date = self.get_time()
         self.folders = []
         self.files = []
         self.users = {}
-        self.address = None
+        self.address = os.getcwd() +'/src/data/' + self.name 
     #TODO: Don´t forget about self.users
     def __str__(self):
         
         return f"{self.modification_date} {self.name} "
+    
+    def get_time(self) -> str:
+        """
+        This method returns the year/month/day/hour/minute/seconds
+         exactly of the momment is called 
+        Args:
+            None
+        Returns:
+            str: The time on a string format
+        """
+        return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def get_name(self) -> str:
         """
@@ -126,6 +137,17 @@ class Folder:
         """
         return [file.get_modification_date() for file in self.files]
     
+    def set_files_modification_date(self) -> None:
+        """
+        This method sets the modification date of the files of the folder
+        Args:
+            None
+        Returns:
+            None
+        """
+        for file in self.files:
+            file.set_modification_date(self.get_time())
+    
     def get_files_sizes(self) -> list:
         """
         This method returns the sizes of the files of the folder
@@ -155,6 +177,17 @@ class Folder:
             list: The addresses of the files of the folder
         """
         return [file.get_address() for file in self.files]
+    
+    def set_files_addresses(self) -> None:
+        """
+        This method sets the addresses of the files of the folder
+        Args:
+            None
+        Returns:
+            None
+        """
+        for file in self.files:
+            file.set_address(self.address + file.get_name() + '.' + file.get_extension())
     
     def get_file_by_name(self, name: str) -> File:
         """
@@ -289,7 +322,7 @@ class Folder:
                                   file['extension'], file['address'])
                     self.files.append(objetct_file)
                 for index_folder in range(0, len(data['folders'])):
-                    object_folder = Folder(data['folders'][index_folder]['name'], data['folders'][index_folder]['modification_date'])
+                    object_folder = Folder(data['folders'][index_folder]['name'])
                     for index_file in range(0, len(data['folders'][index_folder]['files'])):
                         object_file = File(data['folders'][index_folder]['files'][index_file]['name'], \
                                            data['folders'][index_folder]['files'][index_file]['modification_date'],\
@@ -311,11 +344,12 @@ class Folder:
         Returns:
             None
         """
-        self.address = 'src/data/' + self.name + '.json'
+        self.set_address(os.getcwd() +'/src/data/' + self.name + '.json')
         try:
             with open(self.address, 'w', encoding='utf-8') as file:
                 json.dump(self.convert_dict(), file, indent=4)
         except Exception as e:
             print('File cannot be created', e)
+    
     
         
