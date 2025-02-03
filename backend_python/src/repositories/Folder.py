@@ -53,6 +53,16 @@ class Folder:
         """
         return self.modification_date
     
+    def set_modification_date(self, modification_date: str) -> None:
+        """
+        This method sets the modification date of the folder
+        Args:
+            modification_date (str): The modification date of the folder
+        Returns:
+            None
+        """
+        self.modification_date = modification_date
+    
     def get_address(self) -> str:
         """
         This method returns the address of the folder
@@ -221,83 +231,7 @@ class Folder:
             if len(folder.get_folders()) != 0:
                 list_result.append(folder.get_folders_folders(list_result))          
         return list_result        
-
-
-    def get_folders_names(self) -> list:
-        """
-        This method returns the names of the files inner folders of the folder
-        Args:
-            None
-        Returns:
-            list: The files names of the folder
-        """
-        result = []
-        for folder in self.folders:
-            result.append(folder.get_files_names())
-            if len(folder.get_folders()) != 0:
-                result.append(folder.get_folders_names())
-        return result
-
-    def get_folders_modification_dates(self) -> list:
-        """
-        This method returns the modification dates of the folders of the folder
-        Args:
-            None
-        Returns:
-            list: The modification date  of the folders of the folder
-        """
-        result = []
-        for folder in self.folders:
-            result.append(folder.get_files_modification_dates())
-            if len(folder.get_folders()) != 0:
-                result.append(folder.get_folders_modification_dates())
-        return result
     
-    def get_folders_sizes(self) -> list:
-        """
-        This method returns the sizes of the folders of the folder
-        Args:
-            None
-        Returns:
-            list: The sizes of the folders of the folder
-        """
-        result = []
-        for folder in self.folders:
-            result.append(folder.get_files_sizes())
-            if len(folder.get_folders()) != 0:
-                result.append(folder.get_folders_sizes())
-        return result
-    
-    def get_folders_extensions(self) -> list:
-        """
-        This method returns the extensions of the folders of the folder
-        Args:
-            None
-        Returns:
-            list: The extensions of the folders of the folder
-        """
-        result = []
-        for folder in self.folders:
-            result.append(folder.get_files_extensions())
-            if len(folder.get_folders()) != 0:
-                result.append(folder.get_folders_extensions())
-        return result
-    
-    def get_folders_addresses(self) -> list:
-        """
-        This method returns the addresses of the folders of the folder
-        Args:
-            None
-        Returns:
-            list: The addresses of the folders of the folder
-        """
-        result = []
-        for folder in self.folders:
-            result.append(folder.get_files_addresses())
-            if len(folder.get_folders()) != 0:
-                result.append(folder.get_folders_addresses())
-        return result
-
     def add_file(self, file: File) -> None:
         """
         This method adds a file to the folder

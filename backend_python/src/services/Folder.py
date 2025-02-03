@@ -383,9 +383,3 @@ class FolderService(IFolder):
             None
         """
         self.folder.users.remove(user)
-
-        
-        
-        
-    
-    
