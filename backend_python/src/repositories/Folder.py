@@ -21,7 +21,7 @@ class Folder:
     #TODO: Don´t forget about self.users
     def __str__(self):
         
-        return f"{self.name} {self.modification_date}"
+        return f"{self.modification_date} {self.name} "
 
     def get_name(self) -> str:
         """
@@ -32,6 +32,16 @@ class Folder:
             str: The name of the folder
         """
         return self.name
+    
+    def set_name(self, name: str) -> None:
+        """
+        This method sets the name of the folder
+        Args:
+            name (str): The name of the folder
+        Returns:
+            None
+        """
+        self.name = name
 
     def get_modification_date(self) -> str:
         """
@@ -168,6 +178,11 @@ class Folder:
         for folder in self.folders:
             if folder.get_name() == name:
                 return folder
+    
+        for folder in self.get_folders_folders(None):
+            if not isinstance(folder, list) \
+                and folder.get_name() == name:
+                return folder
         return result
     
     def get_folders_files(self, list_result) -> list:
@@ -182,12 +197,30 @@ class Folder:
         #TODO implement a better solution here and repetar logic at the others
         if list_result is None:
             list_result = []
-        for folder in self.folders:
+        for folder in self.get_folders():
             for file in folder.get_files():
                 list_result.append(file)
             if len(folder.get_folders()) != 0:
                 list_result.append(folder.get_folders_files(list_result))
         return list_result
+    
+    def get_folders_folders(self, list_result) -> list:
+        """
+        This methods returns a list of folders list from the folders
+        inners it. Each folder list owner to a folder
+        Args:
+            None
+        Returns:
+            Folders lists
+        """
+        #TODO implement a better solution here and repetar logic at the others
+        if list_result is None:
+            list_result = []
+        for folder in self.get_folders():
+            list_result.append(folder)    
+            if len(folder.get_folders()) != 0:
+                list_result.append(folder.get_folders_folders(list_result))          
+        return list_result        
 
 
     def get_folders_names(self) -> list:

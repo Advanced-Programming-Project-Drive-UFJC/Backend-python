@@ -145,6 +145,17 @@ class IFolder(ABC) :
             None
         """
     @abstractmethod
+    def rename_folder(self, folder_name: str, new_name: str) -> None:
+        """
+        This method rename a folder in the current folder
+        Args:
+            folderName (str): Name of the file to be renamed
+            newName (str): New name of the file
+        Returns:
+            None
+        """
+
+    @abstractmethod
     
     def add_user(self, user: User) -> None:
         """
@@ -175,7 +186,6 @@ class FolderService(IFolder):
 
     
     def show_elements(self) -> list:
-        #TODO: tests it
         """
         This method return a list of files and folders in the current folder
 
@@ -189,7 +199,7 @@ class FolderService(IFolder):
         return self.folder.get_files() + self.folder.get_folders()
     
     def sort_elements(self) -> list:
-        #TODO: tests it
+
         """
         This method sort the folders and files in the current folder
         
@@ -199,10 +209,14 @@ class FolderService(IFolder):
         Returns:
             list: List of files and folders sorted
         """
-        return list.sort(self.folder.get_folders_names() + self.folder.get_files_names())
+        result =  self.folder.get_files_names()
+        if len(self.folder.get_folders()) != 0:
+            for folder in self.folder.get_folders():
+                result.append(folder.get_name())
+        result.sort(reverse=True)
+        return result
     
     def delete_folder(self, folder_name: str) -> None :
-        #TODO: tests it
         """
         This method delete a folder in the current folder
         Args:
@@ -212,11 +226,11 @@ class FolderService(IFolder):
         """
         try:
             self.folder.folders.remove(self.folder.get_folder_by_name(folder_name))
+            print("Folder deleted " + folder_name)
         except Exception as e:
             print("Folder not found", e)
     
     def delete_file(self, file_name: str) -> None:
-        #TODO: tests it
         """
         This method delete a file in the current folder
         Args:
@@ -226,6 +240,7 @@ class FolderService(IFolder):
         """
         try:
             self.folder.files.remove(self.folder.get_file_by_name(file_name))
+            print("File deleted " + file_name)
         except Exception as e:
             print("File not found", e)
     
@@ -273,7 +288,6 @@ class FolderService(IFolder):
             None
         """
 
-    @property
     def move_file(self, file_name: str, address: str):
         #TODO: implements with os library
         """
@@ -294,9 +308,10 @@ class FolderService(IFolder):
         name_list = []
         pattern = ".*" + folder_name + ".*"
         pattern = re.compile(pattern, re.IGNORECASE)
-        for folder in self.folder.get_folders():
-            if pattern.match(folder.get_name()):
-                name_list.append(folder)
+        for folder in self.folder.get_folders_folders(None):
+            if not isinstance(folder, list) \
+                and pattern.match(folder.get_name()):
+                name_list.append(folder.get_name())
         return name_list
     
     def search_file_by_name(self, file_name: str) -> list:
@@ -311,9 +326,13 @@ class FolderService(IFolder):
         name_list = []
         pattern = ".*" + file_name + ".*"
         pattern = re.compile(pattern, re.IGNORECASE)
-        for file in self.folder.get_files() + self.folder.get_folders_files():
+        for file in self.folder.files:
             if pattern.match(file.get_name()):
-                name_list.append(file)
+                name_list.append(file.get_name())
+        for file in self.folder.get_folders_files(None):
+            if not isinstance(file, list) \
+                and pattern.match(file.get_name()):
+                name_list.append(file.get_name())
         return name_list
 
     def rename_file(self, file_name: str, new_name: str) -> None:
@@ -329,6 +348,21 @@ class FolderService(IFolder):
             print("File not found")
         else:
             self.folder.get_file_by_name(file_name).set_name(new_name)
+    
+    def rename_folder(self, folder_name: str, new_name: str) -> None:
+        """
+        This method rename a folder in the current folder
+        Args:
+            folderName (str): Name of the file to be renamed
+            newName (str): New name of the file
+        Returns:
+            None
+        """
+        if (self.folder.get_folder_by_name(folder_name) is None):
+            print("File not found")
+        else:
+            self.folder.get_folder_by_name(folder_name).set_name(new_name)
+
 
     def add_user(self, user: User) -> None:
         """
