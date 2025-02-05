@@ -198,24 +198,6 @@ class FolderService(IFolder):
         """
         return self.folder.get_files() + self.folder.get_folders()
     
-    def sort_elements(self) -> list:
-
-        """
-        This method sort the folders and files in the current folder
-        
-        Args:
-            None
-
-        Returns:
-            list: List of files and folders sorted
-        """
-        result =  self.folder.get_files_names()
-        if len(self.folder.get_folders()) != 0:
-            for folder in self.folder.get_folders():
-                result.append(folder.get_name())
-        result.sort(reverse=True)
-        return result
-    
     def delete_folder(self, folder_name: str) -> None :
         #TODO: Test the subprocces run
         """

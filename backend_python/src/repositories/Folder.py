@@ -148,36 +148,6 @@ class Folder:
         for file in self.files:
             file.set_modification_date(self.get_time())
     
-    def get_files_sizes(self) -> list:
-        """
-        This method returns the sizes of the files of the folder
-        Args:
-            None
-        Returns:
-            list: The sizes of the files of the folder
-        """
-        return [file.get_sizes() for file in self.files]
-    
-    def get_files_extensions(self) -> list:
-        """
-        This method returns the extensions of the files of the folder
-        Args:
-            None
-        Returns:
-            list: The extensions of the files of the folder
-        """
-        return [file.get_extensions() for file in self.files]
-    
-    def get_files_addresses(self) -> list:
-        """
-        This method returns the addresses of the files of the folder
-        Args:
-            None
-        Returns:
-            list: The addresses of the files of the folder
-        """
-        return [file.get_address() for file in self.files]
-    
     def set_files_addresses(self) -> None:
         """
         This method sets the addresses of the files of the folder
