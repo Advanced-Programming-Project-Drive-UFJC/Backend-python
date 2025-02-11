@@ -2,8 +2,11 @@
 This module contains the Folder class represent in the database.
 Author: Juan Nicolás Diaz Salamanca <jndiaz@udistrital.edu.co>
 """
-import json, os, datetime
-import re, shutil
+import json
+import os
+import datetime
+import re
+import shutil
 from .File import File
 
 class Folder:
@@ -12,7 +15,7 @@ class Folder:
     A folder is a dict of dicts
     """
     #TODO : Verify that always exist a data folder in src
-    #TODO: for the root folder, must be os.chdir(os.getcwd() + '/data/')
+
     def __init__(self, name: str) -> None:
         self.name = name
         self.modification_date = self.get_time()
@@ -109,7 +112,6 @@ class Folder:
         """
         return self.files
 
-
     def get_folders(self) -> list:
         """
         This method returns the folders of the folder
@@ -119,8 +121,6 @@ class Folder:
             list: The folders of the folder
         """
         return self.folders
-
-    #TODO: implement getters as paramaters of a super function calle get_files_data
 
     def get_files_names(self) -> list:
         """
@@ -230,7 +230,6 @@ class Folder:
         Returns:
             File lists
         """
-        #TODO implement a better solution here and repetar logic at the others
         if list_result is None:
             list_result = []
         for folder in self.get_folders():
@@ -249,7 +248,6 @@ class Folder:
         Returns:
             Folders lists
         """
-        #TODO implement a better solution here and repetar logic at the others
         if list_result is None:
             list_result = []
         for folder in self.get_folders():
@@ -257,8 +255,6 @@ class Folder:
             if len(folder.get_folders()) != 0:
                 list_result.extend(folder.get_folders_folders(list_result))          
         return list_result        
-    
-    #TODO: On this point, the folder services methods
     
     def show_elements(self) -> list:
         """
@@ -274,7 +270,6 @@ class Folder:
         return self.get_files() + self.get_folders()
 
     def delete_folder(self, folder_name: str) -> None :
-        #TODO: add a method to delete the real files inner folder
         """
         This method delete a folder in the current folder
         Args:
@@ -301,13 +296,12 @@ class Folder:
             None
         """
         new_folder = Folder(folder_name)
-        address, _ = os.path.splitext(self.get_address())
+        address = os.path.splitext(self.get_address())[0]
         new_folder.set_address(address + '/' + folder_name + '/')
         self.folders.append(new_folder)
         return new_folder
         
     def delete_file(self, file_name: str) -> None:
-        #TODO: Test it
         """
         This method delete a file in the current folder
         Args:
@@ -315,47 +309,18 @@ class Folder:
         Returns:
             None
         """
-
-        #self.files.remove(self.get_file_by_name(file_name))
         try:
             file = self.get_file_by_name(file_name)
             if os.path.exists(file.get_address()):
                 os.remove(file.get_address())
-                return f"Archivo {file.get_address()} borrado exitosamente."
-            else:
-                return "Error: El archivo no existe en la dirección especificada."
-    
-        except Exception as e:
-            return f"Error: {e}"
-    
-    def copy_folder(self, address: str) -> None:
-        #TODO: test it 
-        """
-        This method copy a folder from the current folder to another the given 
-        memory address
-        
-        Args:
-            folderName (str): Name of the folder to be copied
-            address (str): Memory address where the folder will be copied
-
-        Returns:
-            None
-        """
-        try:
-            if not os.path.exists(address):
-                return "Error: Address given does not exist"
-            folder_name = os.path.basename(address)
-            new_folder = Folder(folder_name)
-            self.folders.append(new_folder)
-            for element in os.listdir(address):
-                origen_element = os.path.join(address, element)
-                destiny_element = os.path.join(new_folder.get_address(), element)
-                element.set_address(destiny_element)
-                if os.path.isdir(origen_element):
-                    self.copy_folder(origen_element)
-                else:
-                    self.copy_file(origen_element) 
-            return f"Carpeta {address} copiada exitosamente a {self.get_address()}"
+            for file in self.files:
+                if file.get_name() == file_name:
+                    self.files.remove(file)
+                    break
+            for folder in self.folders:
+                if folder.get_files() != [] or folder.get_folders() != []:
+                    folder.delete_file(file_name)
+            return self
     
         except Exception as e:
             return f"Error: {e}"
@@ -372,7 +337,6 @@ class Folder:
         Returns:
             None
         """
-        
         if not os.path.exists(base_dir):
             return "Error: Address given does not exist"
         for root, dirs, files in os.walk(base_dir):
@@ -390,10 +354,45 @@ class Folder:
             return new_file
         except Exception as e:
             return f"Error: {e}"
-          
-
-
     
+    def move_file(self, file_name: str, folder_name: str) :
+        """
+        This method move a file from the current folder to another the given
+        memory address
+        Args:
+            file_name (str): Name of the file to be moved
+            address (str): Memory address where the file will be moved
+        Returns:
+            Folder_root : Folder object
+        """
+        file = self.get_file_by_name(file_name)
+        folder_to_move = self.get_folder_by_name(folder_name)
+        if file is None or folder_to_move is None:
+            return "File not found"
+        else:
+            self.delete_file(file_name)
+            folder_to_move.get_files().append(file)
+            return self
+    
+    def move_folder(self, folder_name: str, folder_destination: str) :
+        """
+        This method move a folder from the current folder to another the given
+        memory address
+        Args:
+            folder_name (str): Name of the folder to be moved
+            address (str): Memory address where the folder will be moved
+        Returns:
+            Folder_root : Folder object
+        """
+        folder_to_move = self.get_folder_by_name(folder_name)
+        folder_to_reach = self.get_folder_by_name(folder_destination)
+        if folder_to_move  is None or folder_to_reach is None:
+            return "Folder not found"
+        else:
+            self.delete_folder(folder_name)
+            folder_to_reach.get_folders().append(folder_to_move)
+            return self
+
     def search_folder_by_name(self, folder_name: str) -> list:
         """
         This method search folders names in the current folder
@@ -434,7 +433,6 @@ class Folder:
         return name_list
 
     def rename_file(self, file_name: str, new_name: str) -> None:
-    #TODO: verify that address is correct
         """
         This method rename a file in the current folder
         Args:
@@ -538,7 +536,7 @@ class Folder:
                 self.address = self.address
                 return self
         except Exception as e:
-            print('File cannot be loaded', e)
+            return f"File cannot be loaded', {e}"
 
     def dict_to_folder(self, data: dict) -> None:
         """
@@ -574,4 +572,4 @@ class Folder:
             with open(self.address, 'w', encoding='utf-8') as file:
                 json.dump(self.convert_dict(), file, indent=4)
         except Exception as e:
-            print('File cannot be created', e)    
+            return f"File cannot be created', {e}"   
