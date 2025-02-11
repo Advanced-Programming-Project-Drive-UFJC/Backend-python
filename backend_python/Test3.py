@@ -10,7 +10,7 @@ Folder4 is empty
 
 from src.repositories.File import File
 from src.repositories.Folder import Folder
-from src.services.Folder import FolderService
+from src.Services.Folder import FolderService
 
 file1 = File("file1", "2021-01-01", "1MB", "txt", "0x0001")
 file2 = File("file2", "2021-01-02", "2MB", "txt", "0x0002")

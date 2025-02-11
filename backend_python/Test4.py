@@ -3,7 +3,7 @@ This module contains tests for os functions
 """
 from src.repositories.Folder import Folder
 from src.repositories.File import File
-from src.services.Folder import FolderService 
+from src.Services.Folder import FolderService 
 import os 
 
 
