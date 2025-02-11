@@ -3,7 +3,7 @@ This module contains the Folder class represent in the database.
 Author: Juan Nicolás Diaz Salamanca <jndiaz@udistrital.edu.co>
 """
 import json, os, datetime
-import re
+import re, shutil
 from .File import File
 
 class Folder:
@@ -306,9 +306,6 @@ class Folder:
         self.folders.append(new_folder)
         return new_folder
         
-        
-        
-    
     def delete_file(self, file_name: str) -> None:
         #TODO: Test it
         """
@@ -363,39 +360,39 @@ class Folder:
         except Exception as e:
             return f"Error: {e}"
 
-    def copy_file(self, address: str) -> None:
-        #TODO: test it 
+    def copy_file(self, file: str, base_dir=os.path.expanduser("~")) -> None:
         """
         This method copy a file from the current folder to another the given
         memory address
 
         Args:
-            fileName (str): Name of the file to be copied
+            file_name (str): Name of the file to be copied
             address (str): Memory address where the file will be copied
         
         Returns:
             None
         """
+        
+        if not os.path.exists(base_dir):
+            return "Error: Address given does not exist"
+        for root, dirs, files in os.walk(base_dir):
+            if file in files:
+                file_address = os.path.abspath(os.path.join(root, file))
+                break
+        file_name = os.path.basename(file_address)
+        file_name, file_extension = os.path.splitext(file_name)
+        file_size = os.path.getsize(file_address)
+        new_address =  os.path.splitext(self.get_address())[0]
+        new_file = File(file_name, self.get_time(), file_size, file_extension, new_address)
+        self.files.append(new_file)
         try:
-            if not os.path.exists(address):
-                return "Error: Address given does not exist"
-            
-            file_name = os.path.basename(address)
-            file_name, file_extension = os.path.splitext(file_name)
-            file_size = os.path.getsize(address)
-            new_file_address = self.get_address() + "/" + file_name + "." + file_extension
-            new_file = File(file_name, self.get_time(), file_size, file_extension, new_file_address )
-            self.files.append(new_file)
-
-            with open(address, 'rb') as file:
-                file = file.read()
-
-            with open(new_file_address, 'wb') as new_file:
-                new_file.write(file)
-
-            return f"Archivo copiado exitosamente a {new_file_address}"
+            shutil.copy2(file_address, os.path.splitext(self.get_address())[0])
+            return new_file
         except Exception as e:
             return f"Error: {e}"
+          
+
+
     
     def search_folder_by_name(self, folder_name: str) -> list:
         """
@@ -437,7 +434,7 @@ class Folder:
         return name_list
 
     def rename_file(self, file_name: str, new_name: str) -> None:
-    #TODO: test it 
+    #TODO: verify that address is correct
         """
         This method rename a file in the current folder
         Args:
@@ -449,14 +446,12 @@ class Folder:
         if (self.get_file_by_name(file_name) is None):
             return "File not found"
         else:
-            file_address = self.get_file_by_name(file_name).get_address()
-            file_new_address = self.get_file_by_name(new_name).get_address()
-            #os.rename(file_address, file_new_address)
-            self.get_file_by_name(file_name).set_name(new_name)
-            
+            file = self.get_file_by_name(file_name)
+            file.set_name(new_name)
+            file.set_modification_date(self.get_time())
+            return file
     
     def rename_folder(self, folder_name: str, new_name: str) -> None:
-        #TODO: test it 
         """
         This method rename a folder in the current folder
         Args:

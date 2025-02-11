@@ -294,6 +294,8 @@ os.chdir(ROOT_ADDRESS)
 #TODO: Eliminar al terminar 
 folder_root = Folder("folder4")
 folder_root.upload("folder4")
+if not os.path.exists(ROOT_ADDRESS + "/folder4/"):
+    os.mkdir(ROOT_ADDRESS + "/folder4")
 
 def is_loaded():
     if folder_root is not None:
@@ -305,6 +307,8 @@ def is_loaded():
 def upload_data(folder_name : str):
     global folder_root
     folder_root = Folder(folder_name)
+    if not os.path.exists(ROOT_ADDRESS + '/' + folder_name + '/'):
+        os.mkdir(ROOT_ADDRESS + '/' + folder_name + '/')
     return folder_root.upload(folder_name)
 
 @router.get("/search_file/{file_name}")
@@ -362,3 +366,16 @@ def rename_folder(folder_name, new_folder_name):
     else:
         return folder_root.rename_folder(folder_name, new_folder_name)
 
+@router.post("/rename_file/{new_file_name}")
+def rename_file(file_name, new_file_name):
+    if not is_loaded():
+        return "ERROR Folder is not loaded"
+    else:
+        return folder_root.rename_file(file_name, new_file_name)
+
+@router.post("/copy_file/{file}")
+def copy_file(file):
+    if not is_loaded():
+        return "ERROR Folder is not loaded"
+    else:
+        return folder_root.copy_file(file)

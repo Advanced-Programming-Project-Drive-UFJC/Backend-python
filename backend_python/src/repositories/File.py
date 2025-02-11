@@ -28,7 +28,7 @@ class File:
         self.modification_date = modification_date
         self.size = size
         self.extension = extension
-        self.address = address
+        self.address = address + '/' + name + extension
     
     def __str__(self):
         return f"{self.size} {self.modification_date} {self.name}.{self.extension}"
@@ -111,7 +111,7 @@ class File:
         Returns:
             None
         """
-        self.address = new_address
+        self.address = new_address + '/' + self.name + '.' + self.extension
     
     def convert_dict(self) -> dict:
         """
