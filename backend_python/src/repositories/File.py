@@ -103,6 +103,16 @@ class File:
         """
         self.modification_date = new_modification_date
     
+    def set_address(self, new_address: str) -> None:
+        """
+        This method sets the memory address of the file
+        Args:
+            newAddress (str): The new memory address of the file
+        Returns:
+            None
+        """
+        self.address = new_address
+    
     def convert_dict(self) -> dict:
         """
         This method converts the file to a dict

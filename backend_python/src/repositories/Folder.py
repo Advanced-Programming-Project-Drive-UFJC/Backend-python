@@ -20,8 +20,6 @@ class Folder:
         self.files = []
         self.users = {}
         self.address = os.getcwd() +'/' + self.name
-        if not os.path.exists(self.address):
-            os.mkdir(self.address)
         
     #TODO: Don´t forget about self.users
     def __str__(self):
@@ -58,6 +56,8 @@ class Folder:
             None
         """
         self.name = name
+        self.modification_date = self.get_time()
+        self.address = os.getcwd() +'/' + self.name + '/'
 
     def get_modification_date(self) -> str:
         """
@@ -274,7 +274,7 @@ class Folder:
         return self.get_files() + self.get_folders()
 
     def delete_folder(self, folder_name: str) -> None :
-        #TODO: Test it
+        #TODO: add a method to delete the real files inner folder
         """
         This method delete a folder in the current folder
         Args:
@@ -282,28 +282,17 @@ class Folder:
         Returns:
             None
         """
-        try:
-            folder = self.get_folder_by_name(folder_name)
-            self.folders.remove(folder)
-            if os.path.exists(folder.get_address()):
-                for item in os.listdir(folder.get_address()):
-                    item_path = os.path.join(folder.get_address(), item)
-                    if os.path.isdir(item_path):
-                        sub_folder = folder.get_folder_by_address(item_path)
-                        item_path.delete_folder(sub_folder.get_name())
-                        os.rmdir(item_path)
-                    else:
-                        os.remove(item_path)
-                os.rmdir(folder.get_address())
-                return f"Carpeta {folder.get_address()} y su contenido borrados exitosamente."
-            else:
-                return "Error: La carpeta no existe en la dirección especificada."
-    
-        except Exception as e:
-            return f"Error: {e}"
+ 
+        folder_to_delete = self.get_folder_by_name(folder_name)
+        for folder in self.folders:
+            if folder == folder_to_delete:
+                self.folders.remove(folder)
+                break
+            if folder.get_folders() != []:
+                folder.delete_folder(folder_name)
+        return self
     
     def create_folder(self, folder_name: str) -> None:
-        #TODO: Test it 
         """
         This method create a folder in the current folder
         Args:
@@ -311,9 +300,11 @@ class Folder:
         Returns:
             None
         """
-        os.chdir(self.get_address())
         new_folder = Folder(folder_name)
+        address, _ = os.path.splitext(self.get_address())
+        new_folder.set_address(address + '/' + folder_name + '/')
         self.folders.append(new_folder)
+        return new_folder
         
         
         
@@ -460,7 +451,7 @@ class Folder:
         else:
             file_address = self.get_file_by_name(file_name).get_address()
             file_new_address = self.get_file_by_name(new_name).get_address()
-            os.rename(file_address, file_new_address)
+            #os.rename(file_address, file_new_address)
             self.get_file_by_name(file_name).set_name(new_name)
             
     
@@ -475,7 +466,7 @@ class Folder:
             None
         """
         if (self.get_folder_by_name(folder_name) is None):
-            print("File not found")
+            return"Folder not found"
         else:
 
             folder = self.get_folder_by_name(folder_name)
@@ -486,6 +477,7 @@ class Folder:
             for sub_folder in folder.get_folders():
                 sub_folder.set_address(folder_new_address + sub_folder.get_name())
                 sub_folder.rename_folder(sub_folder.get_name(), sub_folder.get_name())
+        return self
 
     def add_user(self, user) -> None:
         """
@@ -533,6 +525,7 @@ class Folder:
             None
         """
         self.address = os.getcwd() + '/' + name + '.json'
+        self.address = os.path.abspath(self.address)
         try:
             with open(self.address, 'r', encoding='utf-8') as file:
                 data = json.load(file)
@@ -547,7 +540,7 @@ class Folder:
                     object_folder.dict_to_folder(folder)
                     self.folders.append(object_folder)
                 self.users = data['users']
-                self.address = data['address']
+                self.address = self.address
                 return self
         except Exception as e:
             print('File cannot be loaded', e)

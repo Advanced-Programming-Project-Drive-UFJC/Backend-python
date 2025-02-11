@@ -347,4 +347,18 @@ def create_folder(folder_name):
         return "ERROR Folder is not loaded"
     else:
         return folder_root.create_folder(folder_name)
+    
+@router.delete("/delete_folder/{folder_name}")
+def delete_folder(folder_name):
+    if not is_loaded():
+        return "ERROR Folder is not loaded"
+    else:
+        return folder_root.delete_folder(folder_name)
+
+@router.post("/rename_folder/{new_folder_name}")
+def rename_folder(folder_name, new_folder_name):
+    if not is_loaded():
+        return "ERROR Folder is not loaded"
+    else:
+        return folder_root.rename_folder(folder_name, new_folder_name)
 
