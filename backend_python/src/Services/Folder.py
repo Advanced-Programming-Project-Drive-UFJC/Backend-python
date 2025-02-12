@@ -12,9 +12,6 @@ folder_root = None
 ROOT_ADDRESS = os.getcwd() + '/data/'
 os.chdir(ROOT_ADDRESS)
 
-if not os.path.exists(ROOT_ADDRESS + "/folder4/"):
-    os.mkdir(ROOT_ADDRESS + "/folder4")
-
 def is_loaded():
     """
     This method check if the folder is loaded
