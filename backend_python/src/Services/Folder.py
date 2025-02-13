@@ -175,7 +175,7 @@ def copy_file(file, base_dir=os.path.expanduser("~")):
         return folder_root.copy_file(file, base_dir)
 
 @router.delete("/delete_file/{file}")
-def delete_file(file) -> dict:
+def delete_file(file) :
     """
     This method delete a file inner the folder root
     Args:
@@ -200,7 +200,8 @@ def move_file(file_name: str, folder_name : str) :
     if not is_loaded():
         return "ERROR Folder is not loaded"
     else:
-        return folder_root.move_file(file_name, folder_name)
+        folder_root.move_file(file_name, folder_name)
+        return f"File {file_name} moved to {folder_name}"
     
 @router.post("/move_folder/{folder_name}")
 def move_folder(folder_to_move_name: str, folder_to_reach_name: str) :
@@ -215,7 +216,8 @@ def move_folder(folder_to_move_name: str, folder_to_reach_name: str) :
     if not is_loaded():
         return "ERROR Folder is not loaded"
     else:
-        return folder_root.move_folder(folder_to_move_name , folder_to_reach_name )
+        folder_root.move_folder(folder_to_move_name , folder_to_reach_name )
+        return f"Folder {folder_to_move_name} moved to {folder_to_reach_name}"
 
 @router.post("/save/")
 def save():

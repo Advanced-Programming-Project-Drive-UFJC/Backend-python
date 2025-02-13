@@ -301,7 +301,7 @@ class Folder:
         self.folders.append(new_folder)
         return new_folder
         
-    def delete_file(self, file_name: str) -> None:
+    def delete_file(self, file_name: str): 
         """
         This method delete a file in the current folder
         Args:
@@ -447,7 +447,7 @@ class Folder:
             file = self.get_file_by_name(file_name)
             file.set_name(new_name)
             file.set_modification_date(self.get_time())
-            return file
+            
     
     def rename_folder(self, folder_name: str, new_name: str) -> None:
         """
@@ -470,27 +470,7 @@ class Folder:
             for sub_folder in folder.get_folders():
                 sub_folder.set_address(folder_new_address + sub_folder.get_name())
                 sub_folder.rename_folder(sub_folder.get_name(), sub_folder.get_name())
-        return self
-
-    def add_user(self, user) -> None:
-        """
-        This method add a user to users list who has access to the folder
-        Args:
-            user (User): User to be added
-        Returns:
-            None
-        """
-        self.users.append(user)
-
-    def delete_user(self, user) -> None:
-        """
-        This method delete a user from users list who has access to the folder
-        Args:
-            user (User): User to be deleted
-        Returns:
-            None
-        """
-        self.users.remove(user)
+        
     
     def convert_dict(self) -> dict:
         """

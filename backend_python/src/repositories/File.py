@@ -128,16 +128,4 @@ class File:
             "extension": self.extension,
             "address": self.address
         }
-        
-    
-    def move(self, new_address: str) -> None:
-        """
-        TODO: implement logic low level to move a file. impelemented in services module
-        This method move the file to another memory address
-        Args:
-            newAddress (str): New memory address of the file
-        Returns:
-            None
-        """
-  
     
