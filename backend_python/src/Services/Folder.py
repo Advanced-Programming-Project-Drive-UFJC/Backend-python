@@ -200,8 +200,8 @@ def move_file(file_name: str, folder_name : str) :
     if not is_loaded():
         return "ERROR Folder is not loaded"
     else:
-        folder_root.move_file(file_name, folder_name)
-        return f"File {file_name} moved to {folder_name}"
+        return folder_root.move_file(file_name, folder_name)
+        
     
 @router.post("/move_folder/{folder_name}")
 def move_folder(folder_to_move_name: str, folder_to_reach_name: str) :

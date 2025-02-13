@@ -21,10 +21,8 @@ class Folder:
         self.modification_date = self.get_time()
         self.folders = []
         self.files = []
-        self.users = {}
         self.address = os.getcwd() +'/' + self.name
         
-    #TODO: Don´t forget about self.users
     def __str__(self):
         
         return f"{self.modification_date} {self.name} "
@@ -469,8 +467,7 @@ class Folder:
                 file.set_address(folder_new_address + file.get_name() + '.' + file.get_extension())
             for sub_folder in folder.get_folders():
                 sub_folder.set_address(folder_new_address + sub_folder.get_name())
-                sub_folder.rename_folder(sub_folder.get_name(), sub_folder.get_name())
-        
+                sub_folder.rename_folder(sub_folder.get_name(), sub_folder.get_name())  
     
     def convert_dict(self) -> dict:
         """
@@ -485,7 +482,6 @@ class Folder:
             "modification_date": self.modification_date,
             "folders": [folder.convert_dict() for folder in self.folders],
             "files": [file.convert_dict() for file in self.files],
-            "users": self.users,
             "address": self.address
         }
     
@@ -512,7 +508,6 @@ class Folder:
                     object_folder = Folder(folder['name'])
                     object_folder.dict_to_folder(folder)
                     self.folders.append(object_folder)
-                self.users = data['users']
                 self.address = self.address
                 return self
         except Exception as e:
@@ -536,7 +531,6 @@ class Folder:
             object_file = File(file['name'], file['modification_date'], file['size'],\
                                   file['extension'], file['address'])
             self.files.append(object_file)
-        self.users = data['users']
         self.address = data['address']
 
     def save(self, address: str) -> None:
