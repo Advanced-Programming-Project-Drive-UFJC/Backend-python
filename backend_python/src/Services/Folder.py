@@ -4,7 +4,8 @@ Author: Juan Nicolás Diaz Salamanca <jndiaz@udistrital.edu.co>
 
 """
 import os
-from fastapi import APIRouter
+import shutil
+from fastapi import APIRouter, File, UploadFile
 from repositories.Folder import Folder
 
 router = APIRouter()
@@ -172,8 +173,8 @@ def rename_file(file_name, new_file_name) :
     else:
         return folder_root.rename_file(file_name, new_file_name)
 
-@router.post("/copy_file/{file}")
-def copy_file(file, base_dir=os.path.expanduser("~")):
+@router.post("/copy_file/")
+def copy_file(file: UploadFile = File(...) ):
     """
     This method copy the file of the adress given
     As the argument is the file name and it's extension, the method
@@ -188,7 +189,7 @@ def copy_file(file, base_dir=os.path.expanduser("~")):
     if not is_loaded():
         return "ERROR Folder is not loaded"
     else:
-        return folder_root.copy_file(file, base_dir)
+        return folder_root.copy_file(file, ROOT_ADDRESS)
 
 @router.delete("/delete_file/{file}")
 def delete_file(file) :
@@ -248,3 +249,5 @@ def save():
         return "ERROR Folder is not loaded"
     else:
         return folder_root.save(ROOT_ADDRESS)
+    
+

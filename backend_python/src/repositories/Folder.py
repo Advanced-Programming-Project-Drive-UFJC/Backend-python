@@ -323,35 +323,27 @@ class Folder:
         except Exception as e:
             return f"Error: {e}"
 
-    def copy_file(self, file: str, base_dir=os.path.expanduser("~")) -> None:
+    def copy_file(self, file, root) -> None:
         """
         This method copy a file from the current folder to another the given
         memory address
 
         Args:
-            file_name (str): Name of the file to be copied
-            address (str): Memory address where the file will be copied
-        
+            file : File object
+
         Returns:
             None
         """
-        if not os.path.exists(base_dir):
-            return "Error: Address given does not exist"
-        for root, dirs, files in os.walk(base_dir):
-            if file in files:
-                file_address = os.path.abspath(os.path.join(root, file))
-                break
-        file_name = os.path.basename(file_address)
-        file_name, file_extension = os.path.splitext(file_name)
-        file_size = os.path.getsize(file_address)
-        new_address =  os.path.splitext(self.get_address())[0]
-        new_file = File(file_name, self.get_time(), file_size, file_extension, new_address)
-        self.files.append(new_file)
-        try:
-            shutil.copy2(file_address, os.path.splitext(self.get_address())[0])
-            return new_file
-        except Exception as e:
-            return f"Error: {e}"
+        new_file_address = f"{root}/{self.name}/{file.filename}" 
+        with open(new_file_address, "wb") as new_file:
+            shutil.copyfileobj(file.file, new_file)
+        file_name = os.path.basename(new_file_address)
+        file_name, file_extension = os.path.splitext(new_file_address)
+        file_size = os.path.getsize(new_file_address)
+        new_address =  os.path.splitext(new_file_address)[0]
+        new_element = File(file_name, self.get_time(), file_size, file_extension, new_address)
+        self.files.append(new_element)
+        return self
     
     def move_file(self, file_name: str, folder_name: str) :
         """
