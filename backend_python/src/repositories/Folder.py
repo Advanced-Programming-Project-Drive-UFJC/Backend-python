@@ -219,7 +219,7 @@ class Folder:
                 return folder
         return result
     
-    def get_folders_files(self, list_result) -> list:
+    def get_folders_files(self, list_result : list) -> list:
         """
         This methods returns a list of file list from the folders
         inners it. Each file list owner to a folder
@@ -237,7 +237,7 @@ class Folder:
                 list_result.append(folder.get_folders_files(list_result))
         return list_result
     
-    def get_folders_folders(self, list_result) -> list:
+    def get_folders_folders(self, list_result : list) -> list:
         """
         This methods returns a list of folders list from the folders
         inners it. Each folder list owner to a folder

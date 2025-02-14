@@ -6,6 +6,7 @@ Author: Juan Nicolás Diaz Salamanca <jndiaz@udistrital.edu.co>
 import os
 import shutil
 from fastapi import APIRouter, File, UploadFile
+from pydantic import BaseModel
 from repositories.Folder import Folder
 
 router = APIRouter()
@@ -73,7 +74,7 @@ def search_file(file_name : str):
         return list(set(result_list)) 
 
 @router.get("/search_folder/{folder_name}")       
-def search_folder(folder_name):
+def search_folder(folder_name : str):
     """
     This method search a folder  which match with the name given 
     Args:
@@ -102,7 +103,7 @@ def show_elements():
         return folder_root
 
 @router.get("/show_folder_elements/{folder_name}")
-def show_folder_elements(folder_name):
+def show_folder_elements(folder_name : str):
     """
     This method show the elements in a folder
     Args:
@@ -116,7 +117,7 @@ def show_folder_elements(folder_name):
         return folder_root.get_folder_by_name(folder_name)
 
 @router.post("/create_folder/{folder_name}")
-def create_folder(folder_name):
+def create_folder(folder_name : str):
     """
     This method create a folder
     Args:
@@ -130,7 +131,7 @@ def create_folder(folder_name):
         return folder_root.create_folder(folder_name)
     
 @router.delete("/delete_folder/{folder_name}")
-def delete_folder(folder_name):
+def delete_folder(folder_name : str):
     """
     This method delete a folder
     Args:
@@ -144,7 +145,7 @@ def delete_folder(folder_name):
         return folder_root.delete_folder(folder_name)
 
 @router.post("/rename_folder/{new_folder_name}")
-def rename_folder(folder_name, new_folder_name):
+def rename_folder(folder_name : str, new_folder_name : str):
     """
     This method rename a folder
     Args:
@@ -159,7 +160,7 @@ def rename_folder(folder_name, new_folder_name):
         return folder_root.rename_folder(folder_name, new_folder_name)
 
 @router.post("/rename_file/{new_file_name}")
-def rename_file(file_name, new_file_name) :
+def rename_file(file_name : str, new_file_name : str) :
     """
     This method rename a file
     Args:
@@ -192,7 +193,7 @@ def copy_file(file: UploadFile = File(...) ):
         return folder_root.copy_file(file, ROOT_ADDRESS)
 
 @router.delete("/delete_file/{file}")
-def delete_file(file) :
+def delete_file(file : str) :
     """
     This method delete a file inner the folder root
     Args:

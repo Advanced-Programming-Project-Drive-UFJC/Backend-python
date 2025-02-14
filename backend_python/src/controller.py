@@ -6,6 +6,7 @@ from Services.Folder import router
 app = FastAPI()
 
 
+
 origins = [
     "http://localhost",  
     "http://localhost:9090",  
