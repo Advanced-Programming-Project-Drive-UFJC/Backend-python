@@ -23,19 +23,35 @@ def is_loaded():
     else:
         return False
 
+def create_folder_root(username : str):
+    """
+    This method create a root folder for the user
+    Args:
+        username: str
+    Returns:
+        Folder: Folder object
+    """
+    user_folder = Folder(username)
+    user_folder.save(ROOT_ADDRESS)
+    return user_folder
+
+
 @router.get("/{folder_name}")
 def upload_data(folder_name : str) :
     """
     This method upload a folder to the database
     Args:
-        folder_nae: str
+        folder_name: str
     Returns:
         Folder : Folder object
     """
     global folder_root
-    folder_root = Folder(folder_name)
-    if not os.path.exists(ROOT_ADDRESS + '/' + folder_name + '/'):
+    if not os.path.exists(ROOT_ADDRESS + '/' + folder_name + '/') \
+    and not os.path.exists(ROOT_ADDRESS + '/' + folder_name + '.json'):
         os.mkdir(ROOT_ADDRESS + '/' + folder_name + '/')
+        folder_root = create_folder_root(folder_name)
+    else: 
+        folder_root = Folder(folder_name)
     return folder_root.upload(folder_name)
 
 @router.get("/search_file/{file_name}")
@@ -96,7 +112,7 @@ def show_folder_elements(folder_name):
     if not is_loaded():
         return "ERROR Folder is not loaded"
     else:
-        return folder_root.get_folder_by_name(folder_name).show_elements()
+        return folder_root.get_folder_by_name(folder_name)
 
 @router.post("/create_folder/{folder_name}")
 def create_folder(folder_name):
