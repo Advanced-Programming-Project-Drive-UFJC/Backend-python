@@ -323,7 +323,7 @@ class Folder:
         except Exception as e:
             return f"Error: {e}"
 
-    def copy_file(self, file, root) -> None:
+    def copy_file(self, root, file) -> None:
         """
         This method copy a file from the current folder to another the given
         memory address

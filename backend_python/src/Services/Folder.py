@@ -4,11 +4,14 @@ Author: Juan Nicolás Diaz Salamanca <jndiaz@udistrital.edu.co>
 
 """
 import os
-import shutil
 from fastapi import APIRouter, File, UploadFile
 from pydantic import BaseModel
 from repositories.Folder import Folder
 
+class Data(BaseModel):
+    value1: str
+    value2: str
+    
 router = APIRouter()
 folder_root = None
 ROOT_ADDRESS = os.getcwd() + '/data/'
@@ -145,7 +148,7 @@ def delete_folder(folder_name : str):
         return folder_root.delete_folder(folder_name)
 
 @router.post("/rename_folder/{new_folder_name}")
-def rename_folder(folder_name : str, new_folder_name : str):
+def rename_folder(data : Data):
     """
     This method rename a folder
     Args:
@@ -157,10 +160,10 @@ def rename_folder(folder_name : str, new_folder_name : str):
     if not is_loaded():
         return "ERROR Folder is not loaded"
     else:
-        return folder_root.rename_folder(folder_name, new_folder_name)
+        return folder_root.rename_folder(data.value1, data.value2)
 
 @router.post("/rename_file/{new_file_name}")
-def rename_file(file_name : str, new_file_name : str) :
+def rename_file(data : Data) :
     """
     This method rename a file
     Args:
@@ -172,10 +175,10 @@ def rename_file(file_name : str, new_file_name : str) :
     if not is_loaded():
         return "ERROR Folder is not loaded"
     else:
-        return folder_root.rename_file(file_name, new_file_name)
+        return folder_root.rename_file(data.value1, data.value2)
 
 @router.post("/copy_file/")
-def copy_file(file: UploadFile = File(...) ):
+async def copy_file(file: UploadFile = File(...) ):
     """
     This method copy the file of the adress given
     As the argument is the file name and it's extension, the method
@@ -190,7 +193,7 @@ def copy_file(file: UploadFile = File(...) ):
     if not is_loaded():
         return "ERROR Folder is not loaded"
     else:
-        return folder_root.copy_file(file, ROOT_ADDRESS)
+        return folder_root.copy_file(ROOT_ADDRESS, file)
 
 @router.delete("/delete_file/{file}")
 def delete_file(file : str) :
@@ -207,7 +210,7 @@ def delete_file(file : str) :
         return folder_root.delete_file(file)
 
 @router.post("/move_file/{file}")
-def move_file(file_name: str, folder_name : str) : 
+def move_file(data : Data) : 
     """
     This method move a file to a folder
     Args:
@@ -218,11 +221,11 @@ def move_file(file_name: str, folder_name : str) :
     if not is_loaded():
         return "ERROR Folder is not loaded"
     else:
-        return folder_root.move_file(file_name, folder_name)
+        return folder_root.move_file(data.value1, data.value2)
         
     
 @router.post("/move_folder/{folder_name}")
-def move_folder(folder_to_move_name: str, folder_to_reach_name: str) :
+def move_folder(data : Data) :
     """
     This method move a folder to a folder
     Args:
@@ -234,8 +237,8 @@ def move_folder(folder_to_move_name: str, folder_to_reach_name: str) :
     if not is_loaded():
         return "ERROR Folder is not loaded"
     else:
-        folder_root.move_folder(folder_to_move_name , folder_to_reach_name )
-        return f"Folder {folder_to_move_name} moved to {folder_to_reach_name}"
+        folder_root.move_folder(data.value1 , data.value2) 
+        return f"Folder {data.value1} moved to {data.value2}"
 
 @router.post("/save/")
 def save():
