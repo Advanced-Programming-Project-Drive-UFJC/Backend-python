@@ -7,10 +7,6 @@ import os
 from fastapi import APIRouter, File, UploadFile
 from pydantic import BaseModel
 from repositories.Folder import Folder
-
-class Data(BaseModel):
-    value1: str
-    value2: str
     
 router = APIRouter()
 folder_root = None
@@ -148,7 +144,7 @@ def delete_folder(folder_name : str):
         return folder_root.delete_folder(folder_name)
 
 @router.post("/rename_folder/{new_folder_name}")
-def rename_folder(data : Data):
+def rename_folder(folder_name : str, new_folder_name : str):
     """
     This method rename a folder
     Args:
@@ -160,10 +156,10 @@ def rename_folder(data : Data):
     if not is_loaded():
         return "ERROR Folder is not loaded"
     else:
-        return folder_root.rename_folder(data.value1, data.value2)
+        return folder_root.rename_folder(folder_name, new_folder_name)
 
 @router.post("/rename_file/{new_file_name}")
-def rename_file(data : Data) :
+def rename_file(file_name : str, new_file_name : str):
     """
     This method rename a file
     Args:
@@ -175,7 +171,7 @@ def rename_file(data : Data) :
     if not is_loaded():
         return "ERROR Folder is not loaded"
     else:
-        return folder_root.rename_file(data.value1, data.value2)
+        return folder_root.rename_file(file_name, new_file_name)
 
 @router.post("/copy_file/")
 async def copy_file(file: UploadFile = File(...) ):
@@ -210,7 +206,7 @@ def delete_file(file : str) :
         return folder_root.delete_file(file)
 
 @router.post("/move_file/{file}")
-def move_file(data : Data) : 
+def move_file(file_name : str, folder_to_move : str) : 
     """
     This method move a file to a folder
     Args:
@@ -221,11 +217,11 @@ def move_file(data : Data) :
     if not is_loaded():
         return "ERROR Folder is not loaded"
     else:
-        return folder_root.move_file(data.value1, data.value2)
+        return folder_root.move_file(file_name, folder_to_move)
         
     
 @router.post("/move_folder/{folder_name}")
-def move_folder(data : Data) :
+def move_folder(folder_to_move : str, folder_to_reach : str) :
     """
     This method move a folder to a folder
     Args:
@@ -237,8 +233,8 @@ def move_folder(data : Data) :
     if not is_loaded():
         return "ERROR Folder is not loaded"
     else:
-        folder_root.move_folder(data.value1 , data.value2) 
-        return f"Folder {data.value1} moved to {data.value2}"
+        folder_root.move_folder(folder_to_move, folder_to_reach) 
+        return f"Folder {folder_to_move} moved to {folder_to_reach}"
 
 @router.post("/save/")
 def save():
